@@ -1,7 +1,7 @@
 #include<iostream>
 
 using namespace std;
-
+//Crear al estructura de nodo (tipo de dato complejo)
 struct nodo{
     int valor;
     nodo* siguiente;
@@ -9,11 +9,12 @@ struct nodo{
 
 nodo* tope = nullptr;
 
+//Funcion que inserta un nuevo nodo a la pila
 void push(int valor)
 {
-    nodo* nodoNuevo = new nodo;
-    nodoNuevo->valor= valor;
-    nodoNuevo->siguiente= tope;
+    nodo* nodoNuevo = new nodo; // funcion parecida a malloc
+    nodoNuevo->valor = valor;
+    nodoNuevo->siguiente = tope;
     tope = nodoNuevo;
 }
 
@@ -21,7 +22,8 @@ bool pilaVacia()
 {
     return tope==NULL;
 }
-
+ 
+ //Retira un nodo de la pila
 nodo* pop()
 { 
     nodo* nodoExtraido = tope;
@@ -31,7 +33,7 @@ nodo* pop()
         tope = tope->siguiente;
         nodoExtraido->siguiente = nullptr;
     }
-
+    
     return nodoExtraido;
 }
 
