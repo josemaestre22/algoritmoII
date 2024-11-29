@@ -1,11 +1,22 @@
 #include <iostream>
+#include <cstdlib>
+
+void clear_screen()
+{
+#ifdef WINDOWS
+  std::system ( "CLS" );
+#else
+  // Assume POSIX
+  std::system ( "clear" );
+#endif
+}
 
 using namespace std;
 
 struct Data
 {
-    int cedula;
     string nombre;
+    int cedula;
 };
 
 struct Nodo
@@ -32,14 +43,16 @@ bool isEmpty(Lista* lista)
 }
 
 //AGREGAR ORDENADAMENTE
-void agregarOrdenado(Lista* lista, int cedula, string nombre)
+void agregarOrdenado(Lista* lista)
 {
-    struct Nodo *nuevo;
-    struct Nodo *aux=lista->primero;
+    Nodo* nuevo;
+    Nodo* aux=lista->primero;
 
     nuevo = new Nodo;
-    nuevo->data.cedula = cedula;
-    nuevo->data.nombre = nombre;
+    cout <<  "Ingrese el nombre"  << endl;
+    cin  >> nuevo->data.nombre;
+    cout << "Ingrese la cedula" << endl;
+    cin >> nuevo->data.cedula;
     nuevo->sig = nullptr;
 
     if(isEmpty(lista))
@@ -65,7 +78,7 @@ void agregarOrdenado(Lista* lista, int cedula, string nombre)
 
 void mostrarLista(Lista* lista)
 {
-    struct Nodo *aux = lista->primero;
+    Nodo* aux = lista->primero;
 
     while(aux!=nullptr)
     {
@@ -75,13 +88,65 @@ void mostrarLista(Lista* lista)
     }
 }
 
+Nodo* buscarPersona(Lista* lista, int cedula)
+{
+    Nodo* aux = lista->primero;
+
+    while(aux!=nullptr)
+    {
+        if(aux->data.cedula == cedula)
+        {
+            return aux;
+        }
+        else
+        {
+            aux = aux->sig;
+        }
+    }
+    return  aux;
+}
 
 int main()
 {
     int opcion;
-    
+    Lista* lista = crearLista();
+    int cedula;
+    Nodo* persona;
+
     do
     {
-        opcion 
-    }
+        cout << "Seleccione una Opcion" << endl;
+        cout << "1.-)Agregar"<<endl<<"2.-)Mostrar"<<endl<<"3.-)Buscar"<<endl<<"4.-)Salir"<<endl;
+        cin >> opcion;
+
+        switch(opcion)
+        {
+            case 1: 
+                clear_screen();
+                agregarOrdenado(lista);
+            break;
+
+            case 2:
+                clear_screen(); 
+                mostrarLista(lista);
+            break;
+
+            case 3:
+                clear_screen();
+                cout << "Ingrese la cedula a buscar" << endl;
+                cin >> cedula;
+                persona = buscarPersona(lista, cedula);
+                cout << persona;
+            break;
+
+            case 4:
+                clear_screen();
+                cout << "Hasta Luego!"<<endl;
+            break;
+
+            default:
+            cout << "Opcion Invalida"  << endl;
+        }
+        
+    }while(opcion!=4);
 }
