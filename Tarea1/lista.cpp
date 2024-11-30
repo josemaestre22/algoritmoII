@@ -3,6 +3,7 @@
 
 using namespace std;
 
+//Define la funcion clear_screen() de acorde a el sistema operativo
 void clear_screen()
 {
 #ifdef WINDOWS
@@ -74,7 +75,7 @@ void agregarOrdenado(Lista* lista)
     while (buscarPersona(lista, cedula) != nullptr)
     {
         clear_screen();
-        cout <<  "Ya existe una persona con esta cedula porfavor ingrese otra" << endl;
+        cout <<  "Ya existe una persona con este numero de cedula, porfavor ingrese otro" << endl;
         cin >> cedula;
     }
     
@@ -114,6 +115,7 @@ void mostrarLista(Lista* lista)
     }
 }
 
+//Dado el puntero a el primer nodo de una lista, elimina de manera recursiva todos los nodos de esa lista 
 void eliminarLista(Nodo* actual)
 {
     if(actual == nullptr)
@@ -132,7 +134,7 @@ int main()
     int opcion;
     Lista* lista = crearLista();
     int cedula;
-    Nodo* persona;
+    Nodo* persona = nullptr;
 
     do
     {
