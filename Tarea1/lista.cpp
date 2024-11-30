@@ -1,17 +1,16 @@
 #include <iostream>
 #include <cstdlib>
 
+using namespace std;
+
 void clear_screen()
 {
 #ifdef WINDOWS
   std::system ( "CLS" );
 #else
-  // Assume POSIX
   std::system ( "clear" );
 #endif
 }
-
-using namespace std;
 
 struct Data
 {
@@ -33,7 +32,7 @@ struct Lista
 Lista* crearLista()
 {
     Lista* lista = new Lista;
-    lista->primero=  nullptr;
+    lista->primero = nullptr;
     return lista;
 }
 
@@ -42,17 +41,44 @@ bool isEmpty(Lista* lista)
     return (lista->primero == nullptr);
 }
 
-//AGREGAR ORDENADAMENTE
+Nodo* buscarPersona(Lista* lista, int cedula)
+{
+    Nodo* aux = lista->primero;
+
+    while(aux!=nullptr)
+    {
+        if(aux->data.cedula == cedula)
+        {
+            return aux;
+        }
+        else
+        {
+            aux = aux->sig;
+        }
+    }
+    return nullptr;
+}
+
 void agregarOrdenado(Lista* lista)
 {
     Nodo* nuevo;
     Nodo* aux=lista->primero;
+    int cedula;
 
     nuevo = new Nodo;
     cout <<  "Ingrese el nombre"  << endl;
     cin  >> nuevo->data.nombre;
     cout << "Ingrese la cedula" << endl;
-    cin >> nuevo->data.cedula;
+    cin >> cedula;
+
+    while (buscarPersona(lista, cedula) != nullptr)
+    {
+        clear_screen();
+        cout <<  "Ya existe una persona con esta cedula porfavor ingrese otra" << endl;
+        cin >> cedula;
+    }
+    
+    nuevo->data.cedula = cedula;
     nuevo->sig = nullptr;
 
     if(isEmpty(lista))
@@ -82,29 +108,24 @@ void mostrarLista(Lista* lista)
 
     while(aux!=nullptr)
     {
-        cout << aux->data.nombre<< endl;
+        cout << endl << aux->data.nombre<< endl;
         cout << aux->data.cedula<< endl;
         aux = aux->sig;
     }
 }
 
-Nodo* buscarPersona(Lista* lista, int cedula)
+void eliminarLista(Nodo* actual)
 {
-    Nodo* aux = lista->primero;
-
-    while(aux!=nullptr)
+    if(actual == nullptr)
     {
-        if(aux->data.cedula == cedula)
-        {
-            return aux;
-        }
-        else
-        {
-            aux = aux->sig;
-        }
+        return;
     }
-    return  aux;
+
+    eliminarLista(actual->sig);
+
+    delete actual;
 }
+
 
 int main()
 {
@@ -115,9 +136,13 @@ int main()
 
     do
     {
-        cout << "Seleccione una Opcion" << endl;
-        cout << "1.-)Agregar"<<endl<<"2.-)Mostrar"<<endl<<"3.-)Buscar"<<endl<<"4.-)Salir"<<endl;
-        cin >> opcion;
+        do
+        {
+            clear_screen();
+            cout << "Seleccione una Opcion" << endl;
+            cout << "1.-)Agregar"<<endl<<"2.-)Mostrar"<<endl<<"3.-)Buscar"<<endl<<"4.-)Salir"<<endl;
+            cin >> opcion;
+        }while(opcion<1 || opcion > 4);
 
         switch(opcion)
         {
@@ -129,6 +154,8 @@ int main()
             case 2:
                 clear_screen(); 
                 mostrarLista(lista);
+                cin.ignore();
+                cin.get();
             break;
 
             case 3:
@@ -136,17 +163,26 @@ int main()
                 cout << "Ingrese la cedula a buscar" << endl;
                 cin >> cedula;
                 persona = buscarPersona(lista, cedula);
-                cout << persona;
+                if (persona != nullptr)
+                {
+                    cout << "Nombre: " << persona->data.nombre << endl;
+                    cout << "Cedula: " << persona->data.cedula << endl;
+                }
+                else
+                {
+                    cout  << "No se encontro a  ninguna persona con ese numero de cedula";
+                }
+                cin.ignore();
+                cin.get();
             break;
 
             case 4:
                 clear_screen();
+                eliminarLista(lista->primero);
+                delete lista;
+                lista  = nullptr;
                 cout << "Hasta Luego!"<<endl;
             break;
-
-            default:
-            cout << "Opcion Invalida"  << endl;
         }
-        
     }while(opcion!=4);
 }
